@@ -1,0 +1,304 @@
+<?php
+	/**
+	 * How to enqueue script?
+	 *
+	 *  http://codex.wordpress.org/Function_Reference/wp_enqueue_script
+	 */
+	add_action( 'wp_enqueue_scripts', 'cherry_child_custom_scripts' );
+	function cherry_child_custom_scripts() {
+		// Don't load theme scripts during Elementor editing only
+		if (isset($_GET['elementor-preview'])) {
+			return;
+		}
+		
+		// Ensure jQuery is available
+		wp_enqueue_script('jquery');
+		
+		wp_enqueue_script( 'waypoints.min', CHILD_URL . '/js/waypoints.min.js', array( 'jquery' ), '2.0.3', true );
+		wp_enqueue_script( 'cherryIsotopeView.js', CHILD_URL . '/js/cherryIsotopeView.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'themeScripts', CHILD_URL . '/js/themeScripts.js', array( 'jquery' ), '1.0', true );
+	}
+
+/**
+ * Post Grid
+ *
+ */
+if (!function_exists('posts_grid_shortcode')) {
+
+	function posts_grid_shortcode( $atts, $content = null, $shortcodename = '' ) {
+		extract(shortcode_atts(array(
+			'type'            => 'post',
+			'category'        => '',
+			'custom_category' => '',
+			'tag'             => '',
+			'columns'         => '3',
+			'rows'            => '3',
+			'order_by'        => 'date',
+			'order'           => 'DESC',
+			'thumb_width'     => '370',
+			'thumb_height'    => '250',
+			'lightbox'  	  => 'yes',
+			'meta'            => '',
+			'excerpt_count'   => '15',
+			'link'            => 'yes',
+			'link_text'       => __('Read more', CHERRY_PLUGIN_DOMAIN),
+			'custom_class'    => ''
+		), $atts));
+
+		$spans = $columns;
+		$rand  = rand();
+
+		// columns
+		switch ($spans) {
+			case '1':
+				$spans = 'span12';
+				break;
+			case '2':
+				$spans = 'span6';
+				break;
+			case '3':
+				$spans = 'span4';
+				break;
+			case '4':
+				$spans = 'span3';
+				break;
+			case '6':
+				$spans = 'span2';
+				break;
+		}
+
+		// check what order by method user selected
+		switch ($order_by) {
+			case 'date':
+				$order_by = 'post_date';
+				break;
+			case 'title':
+				$order_by = 'title';
+				break;
+			case 'popular':
+				$order_by = 'comment_count';
+				break;
+			case 'random':
+				$order_by = 'rand';
+				break;
+		}
+
+		// check what order method user selected (DESC or ASC)
+		switch ($order) {
+			case 'DESC':
+				$order = 'DESC';
+				break;
+			case 'ASC':
+				$order = 'ASC';
+				break;
+		}
+
+		// show link after posts?
+		switch ($link) {
+			case 'yes':
+				$link = true;
+				break;
+			case 'no':
+				$link = false;
+				break;
+		}
+
+		global $post;
+		global $my_string_limit_words;
+
+		$numb = $columns * $rows;
+
+		// WPML filter
+		$suppress_filters = get_option('suppress_filters');
+
+		$args = array(
+			'post_type'         => $type,
+			'category_name'     => $category,
+			$type . '_category' => $custom_category,
+			'tag'               => $tag,
+			'numberposts'       => $numb,
+			'orderby'           => $order_by,
+			'order'             => $order,
+			'suppress_filters'  => $suppress_filters
+		);
+
+		$posts = get_posts( $args );
+
+		if ( empty( $posts ) ) {
+			wp_reset_postdata();
+			return;
+		}
+
+		$i          = 0;
+		$count      = 1;
+		$output_end = '';
+		$countul    = 0;
+
+		if ($numb > count($posts)) {
+			$output_end = '</ul>';
+		}
+
+		$output = '<ul class="posts-grid row-fluid unstyled '. $custom_class .' ul-item-'.$countul.'">';
+
+		foreach ( $posts as $j => $post ) {
+			$post_id = $posts[$j]->ID;
+			//Check if WPML is activated
+			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+				global $sitepress;
+
+				$post_lang = $sitepress->get_language_for_element( $post_id, 'post_' . $type );
+				$curr_lang = $sitepress->get_current_language();
+				// Unset not translated posts
+				if ( $post_lang != $curr_lang ) {
+					unset( $posts[$j] );
+				}
+				// Post ID is different in a second language Solution
+				if ( function_exists( 'icl_object_id' ) ) {
+					$posts[$j] = get_post( icl_object_id( $posts[$j]->ID, $type, true ) );
+				}
+			}
+
+			setup_postdata($posts[$j]);
+			$excerpt = get_the_excerpt();
+
+			// === SAFER IMAGE URL HANDLING (PHP 8+) ===
+			$attachment = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), 'full' );
+			$url   = (is_array($attachment) && !empty($attachment[0])) ? $attachment[0] : '';
+			$image = $url ? aq_resize($url, (int)$thumb_width, (int)$thumb_height, true) : '';
+
+			$mediaType  = get_post_meta($post_id, 'tz_portfolio_type', true);
+			$prettyType = 0;
+
+			if ($count > $columns) {
+				$count = 1;
+				$countul ++;
+				$output .= '<ul class="posts-grid row-fluid unstyled '. $custom_class .' ul-item-'.$countul.'">';
+			}
+
+			$output .= '<li class="'. $spans .' list-item-'.$count.'">';
+
+				if($lightbox == 'yes') {
+					if(has_post_thumbnail($post_id) && $mediaType == 'Image') {
+
+						$prettyType = 'prettyPhoto-'.$rand;
+
+						$output .= '<figure class="featured-thumbnail thumbnail">';
+						$output .= '<a href="'.$url.'" title="'.get_the_title($post_id).'" rel="' .$prettyType.'">';
+						$output .= '<img  src="'.$image.'" alt="'.get_the_title($post_id).'" />';
+						$output .= '<span class="zoom-icon"></span></a></figure>';
+					} elseif ($mediaType != 'Video' && $mediaType != 'Audio') {
+
+						$thumbid = 0;
+						$thumbid = get_post_thumbnail_id($post_id);
+
+						$images = get_children( array(
+							'orderby'        => 'menu_order',
+							'order'          => 'ASC',
+							'post_type'      => 'attachment',
+							'post_parent'    => $post_id,
+							'post_mime_type' => 'image',
+							'post_status'    => null,
+							'numberposts'    => -1
+						) );
+
+						if ( $images ) {
+
+							$k = 0;
+							//looping through the images
+							foreach ( $images as $attachment_id => $attachment ) {
+								$prettyType = "prettyPhoto-".$rand ."[gallery".$i."]";
+								//if( $attachment->ID == $thumbid ) continue;
+
+								$image_attributes = wp_get_attachment_image_src( $attachment_id, 'full' ); // returns an array
+								$img = aq_resize( $image_attributes[0], $thumb_width, $thumb_height, true ); //resize & crop img
+								$alt = get_post_meta($attachment->ID, '_wp_attachment_image_alt', true);
+								$image_title = $attachment->post_title;
+
+								if ( $k == 0 ) {
+									if (has_post_thumbnail($post_id)) {
+										$output .= '<figure class="featured-thumbnail thumbnail">';
+										$output .= '<a href="'.$image_attributes[0].'" title="'.get_the_title($post_id).'" rel="' .$prettyType.'">';
+										$output .= '<img src="'.$image.'" alt="'.get_the_title($post_id).'" />';
+									} else {
+										$output .= '<figure class="featured-thumbnail thumbnail">';
+										$output .= '<a href="'.$image_attributes[0].'" title="'.get_the_title($post_id).'" rel="' .$prettyType.'">';
+										$output .= '<img  src="'.$img.'" alt="'.get_the_title($post_id).'" />';
+									}
+								} else {
+									$output .= '<figure class="featured-thumbnail thumbnail" style="display:none;">';
+									$output .= '<a href="'.$image_attributes[0].'" title="'.get_the_title($post_id).'" rel="' .$prettyType.'">';
+								}
+								$output .= '<span class="zoom-icon"></span></a></figure>';
+								$k++;
+							}
+						} elseif (has_post_thumbnail($post_id)) {
+							$prettyType = 'prettyPhoto-'.$rand;
+							$output .= '<figure class="featured-thumbnail thumbnail">';
+							$output .= '<a href="'.$url.'" title="'.get_the_title($post_id).'" rel="' .$prettyType.'">';
+							$output .= '<img  src="'.$image.'" alt="'.get_the_title($post_id).'" />';
+							$output .= '<span class="zoom-icon"></span></a></figure>';
+						}
+					} else {
+
+						// for Video and Audio post format - no lightbox
+						$output .= '<figure class="featured-thumbnail thumbnail"><a href="'.get_permalink($post_id).'" title="'.get_the_title($post_id).'">';
+						$output .= '<img  src="'.$image.'" alt="'.get_the_title($post_id).'" />';
+						$output .= '</a></figure>';
+					}
+				} else {
+					if(has_post_thumbnail($post_id)) {
+						$output .= '<figure class="featured-thumbnail thumbnail">';
+						$output .= '<a href="'.get_permalink($post_id).'" title="'.get_the_title($post_id).'">';
+						$output .= '<img  src="'.$image.'" alt="'.get_the_title($post_id).'" />';
+						$output .= '</a></figure>';
+					}
+				}
+
+				$output .= '<div class="clear"></div>';
+				if ($meta == 'yes') {
+					// begin post meta
+					$output .= '<div class="post_meta">';
+						// post date
+						$output .= '<span class="post_date">';
+						$output .= '<time datetime="'.get_the_time('Y-m-d\TH:i:s', $post_id).'">' .get_the_date(). '</time>';
+						$output .= '</span>';
+					$output .= '</div>';
+					// end post meta
+				}
+
+				$output .= '<h3><a href="'.get_permalink($post_id).'" title="'.get_the_title($post_id).'">';
+					$output .= get_the_title($post_id);
+				$output .= '</a></h3>';
+
+
+				$output .= cherry_get_post_networks(array('post_id' => $post_id, 'display_title' => false, 'output_type' => 'return'));
+				if($excerpt_count >= 1){
+					$output .= '<p class="excerpt">';
+						$output .= wp_trim_words($excerpt,$excerpt_count);
+					$output .= '</p>';
+				}
+				if($link){
+					$output .= '<a href="'.get_permalink($post_id).'" class="btn btn-primary" title="'.get_the_title($post_id).'">';
+					$output .= $link_text;
+					$output .= '</a>';
+				}
+				$output .= '</li>';
+				if ($j == count($posts)-1) {
+					$output .= $output_end;
+				}
+			if ($count % $columns == 0) {
+				$output .= '</ul><!-- .posts-grid (end) -->';
+			}
+		$count++;
+		$i++;
+
+		} // end for
+		wp_reset_postdata(); // restore the global $post variable
+
+		$output = apply_filters( 'cherry_plugin_shortcode_output', $output, $atts, $shortcodename );
+
+		return $output;
+	}
+	add_shortcode('posts_grid', 'posts_grid_shortcode');
+}
+?>

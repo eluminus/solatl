@@ -1,0 +1,220 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MotoPress Video Addon\n"
+"POT-Creation-Date: 2016-02-15 17:46+0200\n"
+"PO-Revision-Date: 2016-02-15 17:46+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../inc/license.php:11
+msgid "Settings saved."
+msgstr ""
+
+#: ../inc/license.php:21
+msgid "Video Addon License"
+msgstr ""
+
+#: ../inc/license.php:22
+msgid ""
+"The License Key is required in order to get automatic plugin updates and "
+"support. You can manage your License Key in your personal account. <a "
+"href='https://motopress.zendesk.com/hc/en-us/articles/202812996-How-to-use-"
+"your-personal-MotoPress-account' target='blank'>Learn more</a>."
+msgstr ""
+
+#: ../inc/license.php:30
+msgid "License Key"
+msgstr ""
+
+#: ../inc/license.php:43
+msgid "Status"
+msgstr ""
+
+#: ../inc/license.php:51
+msgid "Inactive"
+msgstr ""
+
+#: ../inc/license.php:57
+msgid "Valid until"
+msgstr ""
+
+#: ../inc/license.php:59
+msgid "Valid"
+msgstr ""
+
+#: ../inc/license.php:63
+msgid "Disabled"
+msgstr ""
+
+#: ../inc/license.php:69
+msgid "Invalid"
+msgstr ""
+
+#: ../inc/license.php:72
+msgid ""
+"Your License Key does not match the installed plugin. <a href='https://"
+"motopress.zendesk.com/hc/en-us/articles/202957243-What-to-do-if-the-"
+"license-key-doesn-t-correspond-with-the-plugin-license' "
+"target='_blank'>How to fix this.</a>"
+msgstr ""
+
+#: ../inc/license.php:82
+msgid "Action"
+msgstr ""
+
+#: ../inc/license.php:90
+msgid "Activate License"
+msgstr ""
+
+#: ../inc/license.php:95
+msgid "Deactivate License"
+msgstr ""
+
+#: ../inc/license.php:100
+msgid "Renew License"
+msgstr ""
+
+#: ../inc/license.php:111
+msgid "Save"
+msgstr ""
+
+#: ../inc/mpLibrary.php:5
+msgid "Video Lightbox"
+msgstr ""
+
+#: ../inc/mpLibrary.php:8 ../inc/mpLibrary.php:132
+msgid "Source:"
+msgstr ""
+
+#: ../inc/mpLibrary.php:19 ../inc/mpLibrary.php:29 ../inc/mpLibrary.php:144
+#: ../inc/mpLibrary.php:154
+msgid "Video URL"
+msgstr ""
+
+#: ../inc/mpLibrary.php:39 ../inc/mpLibrary.php:164
+msgid "Video Source MP4"
+msgstr ""
+
+#: ../inc/mpLibrary.php:48 ../inc/mpLibrary.php:173
+msgid "Video Source WEBM"
+msgstr ""
+
+#: ../inc/mpLibrary.php:57 ../inc/mpLibrary.php:182
+msgid "Video Source OGG"
+msgstr ""
+
+#: ../inc/mpLibrary.php:66
+msgid "Custom thumbnail"
+msgstr ""
+
+#: ../inc/mpLibrary.php:68
+msgid "Use this option to set a picture from the media library"
+msgstr ""
+
+#: ../inc/mpLibrary.php:72
+msgid "Caption"
+msgstr ""
+
+#: ../inc/mpLibrary.php:81
+msgid "Lightbox"
+msgstr ""
+
+#: ../inc/mpLibrary.php:85
+msgid "Border"
+msgstr ""
+
+#: ../inc/mpLibrary.php:89
+msgid "Bordered"
+msgstr ""
+
+#: ../inc/mpLibrary.php:94
+msgid "Corners"
+msgstr ""
+
+#: ../inc/mpLibrary.php:98
+msgid "Rounded corners"
+msgstr ""
+
+#: ../inc/mpLibrary.php:103
+msgid "Play Button"
+msgstr ""
+
+#: ../inc/mpLibrary.php:107
+msgid "Play button"
+msgstr ""
+
+#: ../inc/mpLibrary.php:112 ../inc/mpLibrary.php:116
+msgid "Overlay"
+msgstr ""
+
+#: ../inc/mpLibrary.php:129 ../inc/mpLibrary.php:232
+msgid "Video"
+msgstr ""
+
+#: ../inc/mpLibrary.php:191
+msgid "Select Image"
+msgstr ""
+
+#: ../inc/mpLibrary.php:202
+msgid "Image size"
+msgstr ""
+
+#: ../inc/mpLibrary.php:205
+msgid "Full"
+msgstr ""
+
+#: ../inc/mpLibrary.php:206
+msgid "Large"
+msgstr ""
+
+#: ../inc/mpLibrary.php:207
+msgid "Medium"
+msgstr ""
+
+#: ../inc/mpLibrary.php:208
+msgid "Thumbnail"
+msgstr ""
+
+#: ../inc/mpLibrary.php:209
+msgid "Custom"
+msgstr ""
+
+#: ../inc/mpLibrary.php:218
+msgid "Enter image size in pixels, ex. 200x100 (Width x Height)"
+msgstr ""
+
+#: ../inc/mpLibrary.php:226
+msgid "Video Slider"
+msgstr ""
+
+#: ../inc/mpLibrary.php:237
+msgid "Add Media"
+msgstr ""
+
+#: ../inc/mpLibrary.php:242
+msgid "Autoplay video"
+msgstr ""
+
+#: ../inc/mpLibrary.php:248
+msgid "Enable slideshow"
+msgstr ""
+
+#: ../inc/mpLibrary.php:254
+msgid "Slideshow speed in seconds"
+msgstr ""
+
+#: ../inc/mpLibrary.php:270
+msgid "Slider"
+msgstr ""
+
+#: ../inc/settingsPage.php:7
+msgid "Video Addon"
+msgstr ""
