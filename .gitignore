@@ -1,3 +1,10 @@
 wp-content/uploads/
 wp-content/cache/
 wp-content/upgrade/
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/backups-*/
+wpvividbackups/
+wpvivid_staging/
+*.log
